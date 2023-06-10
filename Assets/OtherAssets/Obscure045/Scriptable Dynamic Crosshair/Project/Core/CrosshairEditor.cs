@@ -7,7 +7,6 @@ using UnityEditor.UIElements;
 using Obscure.SDC.Utilities;
 
 namespace Obscure.SDC {
-    [CustomEditor(typeof(Crosshair))]
     public class CrosshairEditor : Editor
     {
         /// <summary>

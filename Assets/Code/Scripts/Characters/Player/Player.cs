@@ -13,7 +13,6 @@ namespace FPS
         [Space]
         [SerializeField] private CinemachineVirtualCamera _virtualCamera;
         [SerializeField] private Camera _camera;
-        [SerializeField] private SimpleCrosshair _simpleCrosshair;
 
         private Weapon _currentWeapon;
 
@@ -73,12 +72,10 @@ namespace FPS
         }
         private void Aim()
         {
-            _simpleCrosshair.SetGap(4, true);
             _virtualCamera.m_Lens.FieldOfView = 20;
         }
         private void Unaim()
         {
-            _simpleCrosshair.SetGap(28, true);
             _virtualCamera.m_Lens.FieldOfView = 40;
         }
         private void SetWeapon(WeaponModel weapon)
