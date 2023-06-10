@@ -64,6 +64,7 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
+		public float CurrentSpeed { get => _speed; }
 	
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
