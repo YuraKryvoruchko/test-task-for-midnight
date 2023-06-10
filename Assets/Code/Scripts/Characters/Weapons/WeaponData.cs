@@ -10,6 +10,10 @@ namespace FPS
         public int Damage = 20;
         public int MaxBulletCount = 30;
 
+        public float SpreadInIdle;
+        public float SpreadInMove;
+        public float SpreadInAim;
+
         public float Rate = 0.2f;
 
         public WeaponModel WeaponModel;
