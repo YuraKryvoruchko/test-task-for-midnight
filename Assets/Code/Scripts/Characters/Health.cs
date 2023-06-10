@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Health : MonoBehaviour, ITakeDamaging
@@ -14,6 +13,7 @@ public class Health : MonoBehaviour, ITakeDamaging
 
     #region Actions
 
+    public event Action<int, int> OnChange;
     public event Action OnDeath;
 
     #endregion
@@ -32,6 +32,8 @@ public class Health : MonoBehaviour, ITakeDamaging
     public void TakeDamage(int damage)
     {
         _currentHealth -= damage;
+        OnChange?.Invoke(_currentHealth, _defaultHealth);
+
         if (_currentHealth <= 0)
             OnDeath?.Invoke();
     }

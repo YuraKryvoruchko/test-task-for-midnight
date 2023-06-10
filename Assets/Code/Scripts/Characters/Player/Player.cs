@@ -13,6 +13,7 @@ namespace FPS
         [Space]
         [SerializeField] private CinemachineVirtualCamera _virtualCamera;
         [SerializeField] private Camera _camera;
+        [SerializeField] private SimpleCrosshair _simpleCrosshair;
 
         private Weapon _currentWeapon;
 
@@ -22,7 +23,10 @@ namespace FPS
 
         #region Actions
 
-        public Action OnWeaponChange;
+        public Action<Weapon> OnShoot;
+        public Action<Weapon, int> OnReload;
+        public Action<Weapon, int> OnWeaponChange;
+        public Action OnDeath;
 
         #endregion
 
@@ -36,13 +40,13 @@ namespace FPS
             _input.Player.Reload.performed += (callback) => Reload();
             _input.Player.Aim.performed += (callback) => Aim();
             _input.Player.Aim.canceled += (callback) => Unaim();
-            _input.Player.Weapon1.performed += (callback) => SetWeapon(Weapons.AK);
-            _input.Player.Weapon2.performed += (callback) => SetWeapon(Weapons.ShootGun);
-            _input.Player.Weapon3.performed += (callback) => SetWeapon(Weapons.Pistol);
+            _input.Player.Weapon1.performed += (callback) => SetWeapon(WeaponModel.AK);
+            _input.Player.Weapon2.performed += (callback) => SetWeapon(WeaponModel.ShootGun);
+            _input.Player.Weapon3.performed += (callback) => SetWeapon(WeaponModel.Pistol);
         }
         private void Start()
         {
-            SetWeapon(Weapons.AK);
+            SetWeapon(WeaponModel.AK);
         }
         private void OnEnable()
         {
@@ -60,28 +64,33 @@ namespace FPS
         private void Shoot()
         {
             _currentWeapon.Shoot();
+            OnShoot?.Invoke(_currentWeapon);
         }
         private void Reload()
         {
-            _currentWeapon.Reload();
+            _currentWeapon.Reload(_inventory.GetBullets(_currentWeapon.WeaponData.BulletModel));
+            OnReload?.Invoke(_currentWeapon, _inventory.GetBulletCount(_currentWeapon.WeaponData.BulletModel));
         }
         private void Aim()
         {
-            Debug.Log("Aim");
+            _simpleCrosshair.SetGap(4, true);
             _virtualCamera.m_Lens.FieldOfView = 20;
         }
         private void Unaim()
         {
-            Debug.Log("Unaim");
+            _simpleCrosshair.SetGap(28, true);
             _virtualCamera.m_Lens.FieldOfView = 40;
         }
-        private void SetWeapon(Weapons weapon)
+        private void SetWeapon(WeaponModel weapon)
         {
             _currentWeapon?.gameObject.SetActive(false);
             _currentWeapon = _inventory.GetWeapon(weapon);
             _currentWeapon.PlayerCamera = _camera;
             _handsAnimator.SetWeaponAnimator(_currentWeapon.Animator);
             _currentWeapon.gameObject.SetActive(true);
+
+            OnWeaponChange?.Invoke(_currentWeapon, 
+                _inventory.GetBulletCount(_currentWeapon.WeaponData.BulletModel));
         }
 
         #endregion
