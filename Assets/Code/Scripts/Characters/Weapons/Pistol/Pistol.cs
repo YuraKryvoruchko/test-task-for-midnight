@@ -6,8 +6,6 @@ namespace FPS
 {
     public class Pistol : Weapon
     {
-        private bool _next = true;
-
         #region Actions
 
         public override event Action<int> OnShoot;
@@ -19,7 +17,7 @@ namespace FPS
 
         public async override void StartShoot()
         {
-            if (IsReload == true || CurrentBulletCount <= 0 || IsBlock == true || _next == false)
+            if (IsReload == true || CurrentBulletCount <= 0 || IsBlock == true)
                 return;
 
             IsShooting = true;
@@ -27,9 +25,9 @@ namespace FPS
 
             Shoot();
 
-            _next = false;
+            BlockWeapon();
             await UniTask.Delay(WeaponData.RateInMS);
-            _next = true;
+            UnblockWeapon();
 
             StopShoot();
         }

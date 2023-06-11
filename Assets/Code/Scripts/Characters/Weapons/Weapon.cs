@@ -59,6 +59,7 @@ namespace FPS
         private void Awake()
         {
             _weaponData = _weaponData.GetCopy();
+            CurrentBulletCount = _weaponData.MaxBulletCount;
         }
 
         #endregion

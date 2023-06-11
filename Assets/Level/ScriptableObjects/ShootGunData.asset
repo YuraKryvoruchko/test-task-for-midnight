@@ -18,6 +18,6 @@ MonoBehaviour:
   SpreadInMove: 0.1
   SpreadInAim: 0.035
   ReloadTime: 6817
-  RateInMS: 200
+  RateInMS: 580
   WeaponModel: 2
   BulletModel: 2

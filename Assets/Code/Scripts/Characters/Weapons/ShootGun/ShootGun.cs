@@ -24,7 +24,9 @@ namespace FPS
             Animator.SetBool(IsShootParameter, IsShooting);
 
             Shoot();
+            BlockWeapon();
             await UniTask.Delay(WeaponData.RateInMS);
+            UnblockWeapon();
 
             StopShoot();
         }

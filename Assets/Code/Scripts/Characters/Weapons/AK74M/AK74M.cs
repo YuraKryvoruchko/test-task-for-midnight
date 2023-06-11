@@ -25,7 +25,9 @@ namespace FPS
                     break;
 
                 Shoot();
+                BlockWeapon();
                 await UniTask.Delay(WeaponData.RateInMS);
+                UnblockWeapon();
             }
 
             StopShoot();
