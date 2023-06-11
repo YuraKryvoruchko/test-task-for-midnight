@@ -11,6 +11,12 @@ public class Health : MonoBehaviour, ITakeDamaging
 
     #endregion
 
+    #region Properties
+
+    public bool IsDead { get; private set; }
+
+    #endregion
+
     #region Actions
 
     public event Action<int, int> OnChange;
@@ -22,6 +28,7 @@ public class Health : MonoBehaviour, ITakeDamaging
 
     public void Awake()
     {
+        IsDead = false;
         _currentHealth = _defaultHealth;
     }
 
@@ -34,8 +41,11 @@ public class Health : MonoBehaviour, ITakeDamaging
         _currentHealth -= damage;
         OnChange?.Invoke(_currentHealth, _defaultHealth);
 
-        if (_currentHealth <= 0)
-            OnDeath?.Invoke();
+        if (_currentHealth > 0)
+            return;
+
+        IsDead = true;
+        OnDeath?.Invoke();
     }
 
     #endregion

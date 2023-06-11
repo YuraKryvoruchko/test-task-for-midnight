@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 8997996946398943991}
   - component: {fileID: 8997996946398943992}
   - component: {fileID: 8997996946398943997}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: PlayerCapsule
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -33,7 +33,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1941759206591500503}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.1, z: 1.26}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -267,9 +267,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _handsAnimator: {fileID: 1277143338298591855}
+  _firstPersonController: {fileID: 0}
   _inventory: {fileID: 8997996946398943991}
   _virtualCamera: {fileID: 1513201929427514179}
   _camera: {fileID: 1269704962605900449}
+  _crosshair: {fileID: 0}
 --- !u!114 &8997996946398943997
 MonoBehaviour:
   m_ObjectHideFlags: 0

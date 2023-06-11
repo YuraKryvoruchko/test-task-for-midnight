@@ -70,7 +70,7 @@ namespace FPS
 
             if (Physics.Raycast(ray, out RaycastHit raycastHit, int.MaxValue) == false)
                 return;
-            Debug.Log("Hit");
+            Debug.Log($"Hit: {raycastHit.transform.name}");
             if (raycastHit.transform.TryGetComponent(out ITakeDamaging takeDamaging) == true)
                 takeDamaging.TakeDamage(WeaponData.Damage);
         }
