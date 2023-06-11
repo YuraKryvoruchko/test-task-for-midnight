@@ -3,31 +3,20 @@ using Cysharp.Threading.Tasks;
 
 namespace FPS
 {
-    public class AK74M : Weapon
+    public class Pistol : Weapon
     {
         #region Public Methods
 
-        private void OnGUI()
-        {
-            float coefficient = (float)Screen.width / (float)Screen.height;
-            Rect rect = new Rect(Screen.width / 2 - Screen.width * 0.03f,
-                Screen.height / 2 - Screen.height * 0.03f * coefficient,
-                (Screen.width * 0.03f) * 2, (Screen.height * 0.03f) * 2 * coefficient);
-
-            GUI.Box(rect, "");
-        }
         public async override void StartShoot()
         {
+            if (IsReload == true || CurrentBulletCount <= 0)
+                return;
+
             IsShooting = true;
             Animator.SetBool("IsShoot", IsShooting);
-            while (IsShooting == true)
-            {
-                if (IsReload == true || CurrentBulletCount <= 0)
-                    break;
 
-                Shoot();
-                await UniTask.Delay(WeaponData.RateInMS);
-            }
+            Shoot();
+            await UniTask.Delay(WeaponData.RateInMS);
 
             StopShoot();
         }
@@ -36,6 +25,7 @@ namespace FPS
             IsShooting = false;
             Animator.SetBool("IsShoot", IsShooting);
         }
+
         public async override void Reload(BulletValue bulletValue)
         {
             if (bulletValue.GetValue() == 0 || CurrentBulletCount == WeaponData.MaxBulletCount)
@@ -55,7 +45,7 @@ namespace FPS
 
         #region Private Methods
 
-        public void Shoot()
+        private void Shoot()
         {
             ShootParticle.gameObject.SetActive(true);
             ShootParticle.Play();

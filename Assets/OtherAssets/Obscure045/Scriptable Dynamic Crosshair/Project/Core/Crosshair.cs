@@ -42,6 +42,17 @@ namespace Obscure.SDC {
             Vector2 smoothedSize = Vector2.Lerp(initialSize, size, time);
             GetComponent<RectTransform>().sizeDelta = smoothedSize;
         }
+        public void SetSize(float spread)
+        {
+            float coefficient = (float)Screen.width / (float)Screen.height;
+            Rect rect = new Rect(Screen.width / 2 - Screen.width * spread,
+                Screen.height / 2 - Screen.height * spread * coefficient,
+                (Screen.width * spread) * 2, (Screen.height * spread) * 2 * coefficient);
+
+            Debug.Log(rect.ToString());
+
+            GetComponent<RectTransform>().sizeDelta = rect.size;
+        }
 
         /// <summary>
         /// Multiplies the current crosshair size.

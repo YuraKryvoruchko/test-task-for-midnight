@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Cinemachine;
+using Obscure.SDC;
 
 namespace FPS
 {
@@ -13,6 +14,7 @@ namespace FPS
         [Space]
         [SerializeField] private CinemachineVirtualCamera _virtualCamera;
         [SerializeField] private Camera _camera;
+        [SerializeField] private Crosshair _crosshair;
 
         private Weapon _currentWeapon;
 
@@ -35,6 +37,7 @@ namespace FPS
         {
             _input = new StarterAssetsInput();
             _input.Player.Shoot.performed += (callback) => Shoot();
+            _input.Player.Shoot.canceled += (callback) => StopShoot();
             _input.Player.Shoot.canceled += (callback) => _currentWeapon.Animator.SetBool("IsShoot", false);
             _input.Player.Reload.performed += (callback) => Reload();
             _input.Player.Aim.performed += (callback) => Aim();
@@ -62,8 +65,12 @@ namespace FPS
 
         private void Shoot()
         {
-            _currentWeapon.Shoot();
+            _currentWeapon.StartShoot();
             OnShoot?.Invoke(_currentWeapon);
+        }
+        private void StopShoot()
+        {
+            _currentWeapon.StopShoot();
         }
         private void Reload()
         {
@@ -72,10 +79,12 @@ namespace FPS
         }
         private void Aim()
         {
+            _crosshair.SetSize(0.01f);
             _virtualCamera.m_Lens.FieldOfView = 20;
         }
         private void Unaim()
         {
+            _crosshair.SetSize(0.03f);
             _virtualCamera.m_Lens.FieldOfView = 40;
         }
         private void SetWeapon(WeaponModel weapon)

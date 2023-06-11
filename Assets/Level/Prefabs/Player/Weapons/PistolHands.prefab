@@ -2129,7 +2129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6136959632057833513}
   - component: {fileID: 6136959632057833512}
-  - component: {fileID: 3820066982774278117}
+  - component: {fileID: 2099261602523248333}
   m_Layer: 0
   m_Name: PistolHands
   m_TagString: Untagged
@@ -2177,7 +2177,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3820066982774278117
+--- !u!114 &2099261602523248333
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2186,16 +2186,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6136959632057833514}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f0f52d3a8d658948a0fcc23ad45b4a8, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f108f364b25769448a91e73890779af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 12
-  _maxBulletCount: 20
-  _bulletModel: 1
+  _weaponData: {fileID: 11400000, guid: 616cf56e941f9704185a819fa614d2ce, type: 2}
   _shootParticle: {fileID: 9116380986690489850}
   _animator: {fileID: 6136959632057833512}
   _shootParameter: IsShoot
-  _reloadParameter: Reload
+  _reloadParameter: IsReload
 --- !u!1 &6277634122382827283
 GameObject:
   m_ObjectHideFlags: 0

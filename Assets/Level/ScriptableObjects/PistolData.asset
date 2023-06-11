@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Damage: 12
   MaxBulletCount: 20
-  Rate: 0.2
+  SpreadInIdle: 0
+  SpreadInMove: 0
+  SpreadInAim: 0
+  ReloadTime: 1650
+  RateInMS: 200
   WeaponModel: 1
   BulletModel: 1

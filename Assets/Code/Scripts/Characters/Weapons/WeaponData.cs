@@ -9,13 +9,14 @@ namespace FPS
 
         public int Damage = 20;
         public int MaxBulletCount = 30;
-
+        [Header("Spread Settings")]
         public float SpreadInIdle;
         public float SpreadInMove;
         public float SpreadInAim;
-
-        public float Rate = 0.2f;
-
+        [Space]
+        public int ReloadTime = 3000;
+        public int RateInMS = 200;
+        [Space]
         public WeaponModel WeaponModel;
         public BulletModel BulletModel;
 
@@ -28,7 +29,7 @@ namespace FPS
             WeaponData weaponData = CreateInstance<WeaponData>();
             weaponData.Damage = Damage;
             weaponData.MaxBulletCount = MaxBulletCount;
-            weaponData.Rate = Rate;
+            weaponData.RateInMS = RateInMS;
             weaponData.WeaponModel = WeaponModel;
             weaponData.BulletModel = BulletModel;
 

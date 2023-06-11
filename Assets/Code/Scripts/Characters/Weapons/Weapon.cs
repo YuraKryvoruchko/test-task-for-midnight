@@ -7,9 +7,6 @@ namespace FPS
         #region Fields
 
         [Header("Weapon Data")]
-        [SerializeField] private int _damage;
-        [SerializeField] private int _maxBulletCount;
-        [SerializeField] private BulletModel _bulletModel;
         [SerializeField] private WeaponData _weaponData;
         [Header("VFX")]
         [SerializeField] private ParticleSystem _shootParticle;
@@ -20,16 +17,20 @@ namespace FPS
 
         private int _currentBulletCount;
 
+        private bool _isShooting = false;
+        private bool _isReload = false;
+
         #endregion
 
         #region Properties
 
         public int CurrentBulletCount { get => _currentBulletCount; protected set => _currentBulletCount = value; }
         public WeaponData WeaponData { get => _weaponData; }
-
         public Animator Animator { get => _animator; }
         public Camera PlayerCamera { get; set; }
 
+        protected bool IsShooting { get => _isShooting; set => _isShooting = value; }
+        protected bool IsReload { get => _isReload; set => _isReload = value; }
         protected ParticleSystem ShootParticle { get => _shootParticle; }
 
         #endregion
@@ -45,7 +46,6 @@ namespace FPS
 
         #region Public Methods
 
-        public abstract void Shoot();
         public abstract void StartShoot();
         public abstract void StopShoot();
         public abstract void Reload(BulletValue bulletValue);
@@ -56,10 +56,6 @@ namespace FPS
 
         protected void DefaultRealod(BulletValue bulletValue)
         {
-            if (bulletValue.GetValue() == 0)
-                return;
-
-            Animator.SetTrigger("Reload");
             int addedValue = WeaponData.MaxBulletCount - CurrentBulletCount;
             if (addedValue > bulletValue.GetValue())
                 addedValue = bulletValue.GetValue();
