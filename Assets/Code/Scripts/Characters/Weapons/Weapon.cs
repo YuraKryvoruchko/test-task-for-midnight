@@ -1,8 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-using Random = UnityEngine.Random;
-
 namespace FPS
 {
     public abstract class Weapon : MonoBehaviour
@@ -17,6 +15,8 @@ namespace FPS
         [SerializeField] private Animator _animator;
         [SerializeField] private string _isShootParameter = "IsShoot";
         [SerializeField] private string _isReloadParameter = "IsReload";
+
+        private IShootRayCalculator _shootRayCalculator;
 
         private int _currentBulletCount;
         private float _currentSpread;
@@ -42,7 +42,6 @@ namespace FPS
         public float CurrentSpread { get => _currentSpread; }
         public WeaponData WeaponData { get => _weaponData; }
         public Animator Animator { get => _animator; }
-        public Camera PlayerCamera { get; set; }
         public bool IsBlock { get => _isBlock; }
         public bool IsShake { get => _isShake; }
 
@@ -66,9 +65,11 @@ namespace FPS
 
         #region Public Methods
 
-        public abstract void StartShoot();
-        public abstract void StopShoot();
-        public abstract void Reload(BulletValue bulletValue);
+        public void Init(IShootRayCalculator shootRayCalculator)
+        {
+            _shootRayCalculator = shootRayCalculator;
+            _currentSpread = WeaponData.SpreadInIdle;
+        }
         public void Aim()
         {
             _isAim = true;
@@ -106,6 +107,10 @@ namespace FPS
             _isBlock = false;
         }
 
+        public abstract void StartShoot();
+        public abstract void StopShoot();
+        public abstract void Reload(BulletValue bulletValue);
+
         #endregion
 
         #region Private Methods
@@ -119,19 +124,9 @@ namespace FPS
             bulletValue.RemoveValue(addedValue);
             CurrentBulletCount += addedValue;
         }
-        protected Vector3 CalculateShootPosition(float spread)
+        protected Ray CalculateAndGetShootRay(float spread)
         {
-            float coefficient = (float)Screen.width / (float)Screen.height;
-            Rect rect = new Rect(Screen.width / 2 - Screen.width * spread,
-                Screen.height / 2 - Screen.height * spread * coefficient,
-                (Screen.width * spread) * 2, (Screen.height * spread) * 2 * coefficient);
-
-            Vector3 starPosition = new Vector3(Random.Range(rect.x, rect.x + rect.width),
-                Random.Range(rect.y, rect.y + rect.height), 0);
-
-            Ray ray = Camera.main.ScreenPointToRay(starPosition);
-
-            return ray.origin;
+            return _shootRayCalculator.CalculateAndGetShootRay(spread);
         }
 
         #endregion

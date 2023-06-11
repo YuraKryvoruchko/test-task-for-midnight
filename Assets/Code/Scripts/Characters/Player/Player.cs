@@ -117,7 +117,7 @@ namespace FPS
         {
             _currentWeapon?.gameObject.SetActive(false);
             _currentWeapon = _inventory.GetWeapon(weapon);
-            _currentWeapon.PlayerCamera = _camera;
+            _currentWeapon.Init(new ShootRayCalculatorWithCamera(_camera));
             _handsAnimator.SetWeaponAnimator(_currentWeapon.Animator);
             _currentWeapon.gameObject.SetActive(true);
             _crosshair.SetSize(_currentWeapon.CurrentSpread);

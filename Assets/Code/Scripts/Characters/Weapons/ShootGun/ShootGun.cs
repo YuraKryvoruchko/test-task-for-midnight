@@ -63,7 +63,7 @@ namespace FPS
 
             for (int i = 0; i < 5; i++)
             {
-                Ray ray = new Ray(CalculateShootPosition(CurrentSpread), PlayerCamera.transform.forward);
+                Ray ray = CalculateAndGetShootRay(CurrentSpread);
                 Debug.DrawRay(ray.origin, ray.direction * 200, Color.red, int.MaxValue);
 
                 if (Physics.Raycast(ray, out RaycastHit raycastHit, int.MaxValue) == false)

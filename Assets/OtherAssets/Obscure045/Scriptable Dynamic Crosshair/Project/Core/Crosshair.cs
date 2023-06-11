@@ -49,8 +49,6 @@ namespace Obscure.SDC {
                 Screen.height / 2 - Screen.height * spread * coefficient,
                 (Screen.width * spread) * 2, (Screen.height * spread) * 2 * coefficient);
 
-            Debug.Log(rect.ToString());
-
             GetComponent<RectTransform>().sizeDelta = rect.size;
         }
 

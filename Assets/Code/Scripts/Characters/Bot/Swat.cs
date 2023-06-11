@@ -9,65 +9,6 @@ using Random = UnityEngine.Random;
 
 namespace FPS.AI
 {
-    //    private void Awake()
-    //    {
-    //        NavAgent = GetComponent<NavMeshAgent>();
-    //        NavAgent.speed = Speed;
-    //        NavAgent.stoppingDistance = MinDistance;
-
-    //        EnemyRigidbody = GetComponent<Rigidbody>();
-    //    }
-
-    //    public virtual void TakeDamage(float damage)
-    //    {
-    //        _health -= damage;
-
-    //        if (_health <= 0)
-    //        {
-    //            OnDead?.Invoke();
-
-    //            OnDead = null;
-    //        }
-    //    }
-
-    //    protected bool CanAttack()
-    //    {
-    //        if (PlayerCurrent == null)
-    //        {
-    //            Debug.LogWarning("Player is null!");
-
-    //            return false;
-    //        }
-
-    //        float distance = GetDistance(PlayerCurrent.transform.position);
-
-    //        if (distance <= MinDistance && TargetDetected == true)
-    //            return true;
-    //        else
-    //            return false;
-    //    }
-    //    protected float GetDistance(Vector3 point)
-    //    {
-    //        _distanceToPlayer = Vector3.Distance(NavAgent.transform.position, point);
-
-    //        return _distanceToPlayer;
-    //    }
-
-    //    protected virtual void MoveToEnemy()
-    //    {
-    //        if (_canChangePath == false)
-    //            return;
-
-    //        StartCoroutine(RunTimerToChangePath());
-
-    //        Vector3 point = GetPointMove();
-
-    //        NavAgent.SetDestination(point);
-    //    }
-    //    protected virtual void DepartureFromEnemy()
-    //    {
-    //        NavAgent.Move(Vector3.back * Speed * Time.deltaTime);
-    //    }
     public class Swat : MonoBehaviour
     {
         #region Fields
@@ -77,6 +18,7 @@ namespace FPS.AI
         [SerializeField] private Collider _swatCollider;
         [Header("Weapon")]
         [SerializeField] private Weapon _weapon;
+        [SerializeField] private Transform _shootPoint;
         [Header("NPC Controller")]
         [SerializeField] private int _changePathDelay = 1;
         [SerializeField] private float _maxSpeed = 5f;
@@ -85,7 +27,6 @@ namespace FPS.AI
         [SerializeField] private NavMeshAgent _navMeshAgent;
         [Header("Animations Settings")]
         [SerializeField] private Animator _animator;
-        [SerializeField] private string _speedParameter = "Speed";
         [SerializeField] private string _isShootParameter = "IsShoot";
         [SerializeField] private string _isReloadParameter = "IsReload";
         [SerializeField] private string _xAxitParameter = "XAxit";
@@ -94,7 +35,8 @@ namespace FPS.AI
 
         [SerializeField] private Player _player;
 
-        private float _currentSpeed;
+        private bool _canShoot = true;
+
         private bool _playerIsDead = false;
 
         #endregion
@@ -113,6 +55,7 @@ namespace FPS.AI
             _player.OnDeath += HandlePlayerDead;
             _enemyVision.EnemyDiscovered += HandleEnemyDiscovering;
             _navMeshAgent.stoppingDistance = 10f;
+            _weapon.Init(new ShootRayCalculatorWithoutCamera(_shootPoint, _player.transform));
         }
         private void Update()
         {
@@ -132,20 +75,19 @@ namespace FPS.AI
 
         #endregion
 
-        #region Public Methods
-
-        #endregion
-
         #region Private Methods
 
         private void MoveToPlayer()
         {
             if(_navMeshAgent.pathPending == false)
                 _navMeshAgent.SetDestination(GetPointMove());
+
+            _weapon.Shake();
         }
         private void DepartureFromEnemy()
         {
             _navMeshAgent.Move(Vector3.back * _maxSpeed * Time.deltaTime);
+            _weapon.Shake();
         }
         private Vector3 GetPointMove()
         {
@@ -172,7 +114,6 @@ namespace FPS.AI
         }
         private void UpdateAnimatorMoveParameters()
         {
-            _animator.SetFloat(_speedParameter, _navMeshAgent.speed);
             if (_navMeshAgent.path.corners.Length < 2)
                 return;
 
@@ -194,10 +135,18 @@ namespace FPS.AI
             _animator.SetTrigger(_deathParameter);
             OnDead?.Invoke();
         }
-        private void HandleEnemyDiscovering()
+        private async void HandleEnemyDiscovering()
         {
+            if (_canShoot == false)
+                return;
+
             _animator.SetBool(_isShootParameter, true);
             _weapon.StartShoot();
+            _weapon.StopShoot();
+
+            _canShoot = false;
+            await UniTask.Delay(1160);
+            _canShoot = true;
         }
         private void HandlePlayerDead()
         {

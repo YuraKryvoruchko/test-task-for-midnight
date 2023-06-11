@@ -85,7 +85,7 @@ namespace FPS.AI
             }
             else
             {
-                Debug.DrawRay(startPosition, direction * _distance, Color.red);
+                Debug.DrawRay(startPosition, direction * _distance, Color.black);
             }
 
             return result;

@@ -31,7 +31,7 @@ namespace FPS.UI
 
         private void HandleHealthChanging(int newValue, int defaultValue)
         {
-            _progress.fillAmount = newValue / defaultValue;
+            _progress.fillAmount = (float)newValue / (float)defaultValue;
         }
 
         #endregion

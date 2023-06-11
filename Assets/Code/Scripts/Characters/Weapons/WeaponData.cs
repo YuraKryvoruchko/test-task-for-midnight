@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace FPS
 {
+    [Serializable]
     [CreateAssetMenu(fileName = "WeponData", menuName = "ScriptableObjects/WeaponData", order = 1)]
     public class WeaponData : ScriptableObject
     {

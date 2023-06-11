@@ -62,7 +62,7 @@ namespace FPS
             ShootParticle.gameObject.SetActive(true);
             ShootParticle.Play();
 
-            Ray ray = new Ray(CalculateShootPosition(CurrentSpread), PlayerCamera.transform.forward);
+            Ray ray = CalculateAndGetShootRay(CurrentSpread);
             Debug.DrawRay(ray.origin, ray.direction * 200, Color.red, int.MaxValue);
 
             CurrentBulletCount -= 1;
