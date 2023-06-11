@@ -9,6 +9,7 @@ namespace FPS
 
         [SerializeField] private List<Weapon> _weapons;
 
+        private Dictionary<WeaponModel, Weapon> _typeWeaponPairs = new Dictionary<WeaponModel, Weapon>();
         private Dictionary<BulletModel, BulletValue> _typeBulletPairs = new Dictionary<BulletModel, BulletValue> 
         {
             { BulletModel.AK, new BulletValue(120) },
@@ -18,11 +19,22 @@ namespace FPS
 
         #endregion
 
+        #region Unity Methods
+
+        private void Awake()
+        {
+            _typeWeaponPairs = new Dictionary<WeaponModel, Weapon>();
+            foreach (Weapon weapon in _weapons)
+                _typeWeaponPairs.Add(weapon.WeaponData.WeaponModel, weapon);
+        }
+
+        #endregion
+
         #region Public Methods
 
-        public Weapon GetWeapon(WeaponModel weapons)
+        public Weapon GetWeapon(WeaponModel weaponModel)
         {
-            return _weapons[(int)weapons];
+            return _typeWeaponPairs[weaponModel];
         }
         public BulletValue GetBullets(BulletModel bulletModel)
         {
