@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Cinemachine;
 using Obscure.SDC;
+using StarterAssets;
 
 namespace FPS
 {
@@ -10,6 +11,7 @@ namespace FPS
         #region Fields
 
         [SerializeField] private HandsAnimator _handsAnimator;
+        [SerializeField] private FirstPersonController _firstPersonController;
         [SerializeField] private Inventory _inventory;
         [Space]
         [SerializeField] private CinemachineVirtualCamera _virtualCamera;
@@ -36,18 +38,18 @@ namespace FPS
         private void Awake()
         {
             _input = new StarterAssetsInput();
-            _input.Player.Shoot.performed += (callback) => Shoot();
+            _input.Player.Shoot.performed += (callback) => StartShoot();
             _input.Player.Shoot.canceled += (callback) => StopShoot();
-            _input.Player.Shoot.canceled += (callback) => _currentWeapon.Animator.SetBool("IsShoot", false);
             _input.Player.Reload.performed += (callback) => Reload();
             _input.Player.Aim.performed += (callback) => Aim();
-            _input.Player.Aim.canceled += (callback) => Unaim();
+            _input.Player.Aim.canceled += (callback) => ExitAiming();
             _input.Player.Weapon1.performed += (callback) => SetWeapon(WeaponModel.AK);
             _input.Player.Weapon2.performed += (callback) => SetWeapon(WeaponModel.ShootGun);
             _input.Player.Weapon3.performed += (callback) => SetWeapon(WeaponModel.Pistol);
         }
         private void Start()
         {
+            _crosshair.SetColor(Color.grey, 1);
             SetWeapon(WeaponModel.AK);
         }
         private void OnEnable()
@@ -58,12 +60,19 @@ namespace FPS
         {
             _input.Disable();
         }
+        private void Update()
+        {
+            if (_firstPersonController.Grounded == false || _firstPersonController.CurrentSpeed != 0)
+                HandleMove();
+            else
+                HandleStopMove();
+        }
 
         #endregion
 
         #region Private Methods
 
-        private void Shoot()
+        private void StartShoot()
         {
             _currentWeapon.StartShoot();
             OnShoot?.Invoke(_currentWeapon);
@@ -79,13 +88,30 @@ namespace FPS
         }
         private void Aim()
         {
-            _crosshair.SetSize(0.01f);
+            _currentWeapon.Aim();
+            _crosshair.SetSize(_currentWeapon.CurrentSpread);
             _virtualCamera.m_Lens.FieldOfView = 20;
         }
-        private void Unaim()
+        private void ExitAiming()
         {
-            _crosshair.SetSize(0.03f);
+            _currentWeapon.ExitAiming();
+            _crosshair.SetSize(_currentWeapon.CurrentSpread);
             _virtualCamera.m_Lens.FieldOfView = 40;
+        }
+        private void HandleMove()
+        {
+            _currentWeapon.Shake(); 
+            _crosshair.SetSize(_currentWeapon.CurrentSpread);
+
+            if (_firstPersonController.CurrentSpeed == _firstPersonController.SprintSpeed)
+                _currentWeapon.BlockWeapon();
+            else
+                _currentWeapon.UnblockWeapon();
+        }
+        private void HandleStopMove()
+        {
+            _currentWeapon.StopShake();
+            _crosshair.SetSize(_currentWeapon.CurrentSpread);
         }
         private void SetWeapon(WeaponModel weapon)
         {
@@ -94,6 +120,7 @@ namespace FPS
             _currentWeapon.PlayerCamera = _camera;
             _handsAnimator.SetWeaponAnimator(_currentWeapon.Animator);
             _currentWeapon.gameObject.SetActive(true);
+            _crosshair.SetSize(_currentWeapon.CurrentSpread);
 
             OnWeaponChange?.Invoke(_currentWeapon, 
                 _inventory.GetBulletCount(_currentWeapon.WeaponData.BulletModel));

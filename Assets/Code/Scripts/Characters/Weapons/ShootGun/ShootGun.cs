@@ -1,19 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Cysharp.Threading.Tasks;
 
 namespace FPS
 {
     public class ShootGun : Weapon
     {
+        #region Actions
+
+        public override event Action<int> OnShoot;
+        public override event Action<int, int> OnReload;
+
+        #endregion
+
         #region Public Methods
 
         public async override void StartShoot()
         {
-            if (IsReload == true || CurrentBulletCount <= 0)
+            if (IsReload == true || CurrentBulletCount <= 0 || IsBlock == true)
                 return;
 
             IsShooting = true;
-            Animator.SetBool("IsShoot", IsShooting);
+            Animator.SetBool(IsShootParameter, IsShooting);
 
             Shoot();
             await UniTask.Delay(WeaponData.RateInMS);
@@ -23,22 +31,23 @@ namespace FPS
         public override void StopShoot()
         {
             IsShooting = false;
-            Animator.SetBool("IsShoot", IsShooting);
+            Animator.SetBool(IsShootParameter, IsShooting);
         }
 
         public async override void Reload(BulletValue bulletValue)
         {
-            if (bulletValue.GetValue() == 0 || CurrentBulletCount == WeaponData.MaxBulletCount)
+            if (bulletValue.GetValue() == 0 || CurrentBulletCount == WeaponData.MaxBulletCount || IsBlock == true)
                 return;
 
             IsReload = true;
-            Animator.SetBool("IsReload", IsReload);
+            Animator.SetBool(IsReloadParameter, IsReload);
 
             await UniTask.Delay(WeaponData.ReloadTime);
 
             DefaultRealod(bulletValue);
             IsReload = false;
-            Animator.SetBool("IsReload", IsReload);
+            Animator.SetBool(IsReloadParameter, IsReload);
+            OnReload?.Invoke(CurrentBulletCount, bulletValue.GetValue());
         }
 
         #endregion
@@ -52,7 +61,7 @@ namespace FPS
 
             for (int i = 0; i < 5; i++)
             {
-                Ray ray = new Ray(CalculateShootPosition(0.8f), PlayerCamera.transform.forward);
+                Ray ray = new Ray(CalculateShootPosition(CurrentSpread), PlayerCamera.transform.forward);
                 Debug.DrawRay(ray.origin, ray.direction * 200, Color.red, int.MaxValue);
 
                 if (Physics.Raycast(ray, out RaycastHit raycastHit, int.MaxValue) == false)
@@ -63,6 +72,7 @@ namespace FPS
             }
 
             CurrentBulletCount -= 1;
+            OnShoot?.Invoke(CurrentBulletCount);
         }
 
         #endregion

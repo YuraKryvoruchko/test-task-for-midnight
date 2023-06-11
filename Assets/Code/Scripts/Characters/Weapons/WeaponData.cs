@@ -29,6 +29,10 @@ namespace FPS
             WeaponData weaponData = CreateInstance<WeaponData>();
             weaponData.Damage = Damage;
             weaponData.MaxBulletCount = MaxBulletCount;
+            weaponData.SpreadInIdle = SpreadInIdle;
+            weaponData.SpreadInMove = SpreadInMove;
+            weaponData.SpreadInAim = SpreadInAim;
+            weaponData.ReloadTime = ReloadTime;
             weaponData.RateInMS = RateInMS;
             weaponData.WeaponModel = WeaponModel;
             weaponData.BulletModel = BulletModel;

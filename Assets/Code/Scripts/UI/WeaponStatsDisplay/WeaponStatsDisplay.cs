@@ -13,35 +13,49 @@ namespace FPS.UI
         [Header("Player")]
         [SerializeField] private Player _player;
 
+        private Weapon _currentWeapon;
+
         #endregion
 
         #region Unity Methods
 
         private void OnEnable()
         {
-            _player.OnWeaponChange += UpdateAllStats;
-            _player.OnReload += UpdateAllStats;
-            _player.OnShoot += HandleShoot;
+            _player.OnWeaponChange += HandleWeaponChange;
         }
         public void OnDisable()
         {
-            _player.OnWeaponChange -= UpdateAllStats;
-            _player.OnReload -= UpdateAllStats;
-            _player.OnShoot -= HandleShoot;
+            _player.OnWeaponChange -= HandleWeaponChange;
         }
 
         #endregion
 
         #region Private Methods
 
-        private void UpdateAllStats(Weapon weapon, int bulletCountInInventory)
+        private void HandleWeaponChange(Weapon weapon, int bulletCountInInventory)
         {
-            _currentBulletCount.text = weapon.CurrentBulletCount.ToString();
-            _bulletCountInInventory.text = bulletCountInInventory.ToString();
+            if (_currentWeapon != null)
+            {
+                _currentWeapon.OnShoot -= HandleShoot;
+                _currentWeapon.OnReload -= HandleReload;
+            }
+            UpdateAllStats(weapon.CurrentBulletCount, bulletCountInInventory);
+            _currentWeapon = weapon;
+            _currentWeapon.OnShoot += HandleShoot;
+            _currentWeapon.OnReload += HandleReload;
         }
-        private void HandleShoot(Weapon weapon)
+        private void HandleShoot(int currentBulletCount)
         {
-            _currentBulletCount.text = weapon.CurrentBulletCount.ToString();
+            _currentBulletCount.text = currentBulletCount.ToString();
+        }
+        private void HandleReload(int currentBulletCount, int bulletCountInInventory)
+        {
+            UpdateAllStats(currentBulletCount, bulletCountInInventory);
+        }
+        private void UpdateAllStats(int currentBulletCount, int bulletCountInInventory)
+        {
+            _currentBulletCount.text = currentBulletCount.ToString();
+            _bulletCountInInventory.text = bulletCountInInventory.ToString();
         }
 
         #endregion
