@@ -37,9 +37,12 @@ namespace FPS.Infrastructure
 
         private void OnApplicationFocus(bool focus)
         {
-            if (focus == true && _isEnd == false)
+            if (focus == true)
                 LockCursor();
             else
+                UnlockCursor();
+
+            if(_isEnd == true)
                 UnlockCursor();
         }
         private void Awake()
