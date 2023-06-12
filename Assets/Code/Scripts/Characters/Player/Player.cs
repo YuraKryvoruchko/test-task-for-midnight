@@ -28,6 +28,8 @@ namespace FPS
 
         private StarterAssetsInput _input;
 
+        private IShootRayCalculator _shootRayCalculator;
+
         private const int WEAPON_1 = 1;
         private const int WEAPON_2 = 2;
         private const int WEAPON_3 = 3;
@@ -72,6 +74,7 @@ namespace FPS
             _health.OnDeath += HandlePlayerDead;
             _inventory.Init();
             _crosshair.SetColor(Color.black, 1);
+            _shootRayCalculator = new ShootRayCalculatorWithCamera(_mainCamera);
             SetWeapon(WEAPON_1);
             InputInstall();
         }
@@ -151,7 +154,7 @@ namespace FPS
         {
             _currentWeapon?.gameObject.SetActive(false);
             _currentWeapon = _inventory.GetWeapon(index);
-            _currentWeapon.Init(new ShootRayCalculatorWithCamera(_mainCamera));
+            _currentWeapon.SetShootRayCalculator(_shootRayCalculator);
             _handsAnimator.SetWeaponAnimator(_currentWeapon.Animator);
             _currentWeapon.gameObject.SetActive(true);
             _crosshair.SetSize(_currentWeapon.CurrentSpread);

@@ -89,7 +89,7 @@ namespace FPS.AI
             _player = player;
             _player.OnDeath += HandlePlayerDead;
             _health.OnDeath += Die;
-            _weapon.Init(new ShootRayCalculatorWithoutCamera(_shootPoint, _player.transform));
+            _weapon.SetShootRayCalculator(new ShootRayCalculatorWithoutCamera(_shootPoint, _player.transform));
         }
 
         #endregion

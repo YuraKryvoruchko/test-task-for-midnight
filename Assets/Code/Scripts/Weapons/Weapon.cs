@@ -58,6 +58,7 @@ namespace FPS
         private void Awake()
         {
             _weaponData = _weaponData.GetCopy();
+            _currentSpread = WeaponData.SpreadInIdle;
             CurrentBulletCount = _weaponData.MaxBulletCount;
         }
 
@@ -65,10 +66,9 @@ namespace FPS
 
         #region Public Methods
 
-        public void Init(IShootRayCalculator shootRayCalculator)
+        public void SetShootRayCalculator(IShootRayCalculator shootRayCalculator)
         {
             _shootRayCalculator = shootRayCalculator;
-            _currentSpread = WeaponData.SpreadInIdle;
         }
         public void Aim()
         {
