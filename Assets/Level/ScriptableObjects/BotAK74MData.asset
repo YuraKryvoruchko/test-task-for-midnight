@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: BotAK74MData
   m_EditorClassIdentifier: 
   Damage: 15
-  MaxBulletCount: 3000
-  SpreadInIdle: 0.045
-  SpreadInMove: 0.06
-  SpreadInAim: 0.03
+  MaxBulletCount: 3
+  SpreadInIdle: 0.05
+  SpreadInMove: 0.065
+  SpreadInAim: 0.035
   ReloadTime: 3000
   RateInMS: 200
   WeaponModel: 0

@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
-using FPS;
-
-using Random = UnityEngine.Random;
 
 namespace FPS.AI
 {
@@ -14,19 +10,21 @@ namespace FPS.AI
         #region Fields
 
         [SerializeField] private Health _health;
-        [SerializeField] private EnemyVision _enemyVision;
+        [SerializeField] private BotVision _vision;
         [SerializeField] private Collider _swatCollider;
         [Header("Weapon")]
         [SerializeField] private Weapon _weapon;
         [SerializeField] private Transform _shootPoint;
         [Header("NPC Controller")]
-        [SerializeField] private int _changePathDelay = 1;
-        [SerializeField] private float _maxSpeed = 5f;
+        [SerializeField] private float _maxSpeed = 3.5f;
         [SerializeField] private float _maxRotationSpeed = 40f;
-        [SerializeField] private Vector3 _offsetFromPlayer;
+        [SerializeField] private float _maxDistanceToPlayer = 16f;
+        [SerializeField] private float _minDistanceToPlayer = 11f;
         [SerializeField] private NavMeshAgent _navMeshAgent;
         [Header("Animations Settings")]
         [SerializeField] private Animator _animator;
+        [SerializeField] private int _shootDelayInMS = 1160;
+        [SerializeField] private int _reloadDelayInMS = 3300;
         [SerializeField] private string _isShootParameter = "IsShoot";
         [SerializeField] private string _isReloadParameter = "IsReload";
         [SerializeField] private string _xAxitParameter = "XAxit";
@@ -35,9 +33,12 @@ namespace FPS.AI
 
         [SerializeField] private Player _player;
 
-        private bool _canShoot = true;
+        private bool _canMakeNextShoot = true;
+        private bool _isReload = false;
 
         private bool _playerIsDead = false;
+
+        private const int NEXT_CORNER = 1;
 
         #endregion
 
@@ -51,11 +52,7 @@ namespace FPS.AI
 
         private void Awake()
         {
-            _health.OnDeath += Die;
-            _player.OnDeath += HandlePlayerDead;
-            _enemyVision.EnemyDiscovered += HandleEnemyDiscovering;
-            _navMeshAgent.stoppingDistance = 10f;
-            _weapon.Init(new ShootRayCalculatorWithoutCamera(_shootPoint, _player.transform));
+            Init(_player);
         }
         private void Update()
         {
@@ -65,12 +62,26 @@ namespace FPS.AI
             LookEnemy();
 
             float distanceToPlayer = GetDistanceToPlayer();
-            if (distanceToPlayer > 10f)
+            if (distanceToPlayer > _maxDistanceToPlayer)
                 MoveToPlayer();
-            else if (distanceToPlayer < 5f)
-                DepartureFromEnemy();
+            else if (distanceToPlayer < _minDistanceToPlayer)
+                DepartureFromPlayer();
+            else
+                Idle();
 
             UpdateAnimatorMoveParameters();
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public void Init(Player player)
+        {
+            _player = player;
+            _health.OnDeath += Die;
+            _player.OnDeath += HandlePlayerDead;
+            _weapon.Init(new ShootRayCalculatorWithoutCamera(_shootPoint, _player.transform));
         }
 
         #endregion
@@ -79,30 +90,55 @@ namespace FPS.AI
 
         private void MoveToPlayer()
         {
-            if(_navMeshAgent.pathPending == false)
+            _navMeshAgent.speed = _maxSpeed;
+            if (_navMeshAgent.pathPending == false)
                 _navMeshAgent.SetDestination(GetPointMove());
 
+            _animator.SetBool(_isShootParameter, false);
             _weapon.Shake();
         }
-        private void DepartureFromEnemy()
+        private void DepartureFromPlayer()
         {
-            _navMeshAgent.Move(Vector3.back * _maxSpeed * Time.deltaTime);
+            _navMeshAgent.speed = _maxSpeed;
+            _animator.SetBool(_isShootParameter, false);
+            _navMeshAgent.Move(Vector3.back * _navMeshAgent.speed * Time.deltaTime);
             _weapon.Shake();
         }
-        private Vector3 GetPointMove()
+        private void Idle()
         {
-            Vector3 playerTransform = new Vector3(_player.transform.position.x, 0,
-                _player.transform.position.z);
+            _navMeshAgent.speed = 0;
+            _weapon.StopShake();
 
-            float offsetX = Random.value > 0.5f ? _offsetFromPlayer.x : -_offsetFromPlayer.x;
-            float offsetY = Random.value > 0.5f ? _offsetFromPlayer.y : -_offsetFromPlayer.y;
-            float offsetZ = Random.value > 0.5f ? _offsetFromPlayer.z : -_offsetFromPlayer.z;
+            if (_vision.PlayerIsDiscovered == true)
+                ShootToPlayer();
+        }
+        private async void ShootToPlayer()
+        {
+            if (_canMakeNextShoot == false || _isReload == true)
+                return;
+            if (_weapon.CurrentBulletCount == 0)
+            {
+                Reload();
+                return;
+            }
 
-            Vector3 offset = new Vector3(offsetX, offsetY, offsetZ);
+            _animator.SetBool(_isShootParameter, true);
+            _weapon.StartShoot();
+            _weapon.StopShoot();
 
-            Vector3 point = playerTransform + offset;
+            _canMakeNextShoot = false;
+            await UniTask.Delay(_shootDelayInMS);
+            _canMakeNextShoot = true;
+        }
+        private async void Reload()
+        {
+            _isReload = true;
+            _animator.SetBool(_isReloadParameter, _isReload);
+            _weapon.Reload(new BulletValue(_weapon.WeaponData.MaxBulletCount));
 
-            return point;
+            await UniTask.Delay(_reloadDelayInMS);
+            _isReload = false;
+            _animator.SetBool(_isReloadParameter, _isReload);
         }
         private void LookEnemy()
         {
@@ -112,15 +148,23 @@ namespace FPS.AI
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation,
                 _maxRotationSpeed * Time.deltaTime);
         }
+        private Vector3 GetPointMove()
+        {
+            Vector3 point = new Vector3(_player.transform.position.x, transform.position.y,
+                _player.transform.position.z);
+            return point;
+        }
         private void UpdateAnimatorMoveParameters()
         {
-            if (_navMeshAgent.path.corners.Length < 2)
-                return;
+            Vector3 inverseMoveDirection = Vector3.zero;
+            if (_navMeshAgent.path.corners.Length > 1 && _navMeshAgent.speed > 0)
+            {
+                Vector3 direction = (_navMeshAgent.path.corners[NEXT_CORNER] - transform.position).normalized;
+                inverseMoveDirection = transform.InverseTransformDirection(direction);
+            }
 
-            Vector3 direction = (_navMeshAgent.path.corners[1] - transform.position).normalized;
-            Vector3 inverseDirection = transform.InverseTransformDirection(direction);
-            _animator.SetFloat(_xAxitParameter, inverseDirection.x);
-            _animator.SetFloat(_zAxitParameter, inverseDirection.z);
+            _animator.SetFloat(_xAxitParameter, inverseMoveDirection.x);
+            _animator.SetFloat(_zAxitParameter, inverseMoveDirection.z);
         }
         private float GetDistanceToPlayer()
         {
@@ -130,30 +174,17 @@ namespace FPS.AI
         {
             _swatCollider.enabled = false;
             _navMeshAgent.enabled = false;
-            _enemyVision.enabled = false;
+            _vision.enabled = false;
             _health.OnDeath -= Die;
             _animator.SetTrigger(_deathParameter);
             OnDead?.Invoke();
-        }
-        private async void HandleEnemyDiscovering()
-        {
-            if (_canShoot == false)
-                return;
-
-            _animator.SetBool(_isShootParameter, true);
-            _weapon.StartShoot();
-            _weapon.StopShoot();
-
-            _canShoot = false;
-            await UniTask.Delay(1160);
-            _canShoot = true;
         }
         private void HandlePlayerDead()
         {
             _player.OnDeath -= HandlePlayerDead;
             _playerIsDead = true;
             _navMeshAgent.isStopped = true;
-            _enemyVision.enabled = false;
+            _vision.enabled = false;
         }
 
         #endregion

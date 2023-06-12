@@ -3,8 +3,10 @@ using UnityEngine;
 
 namespace FPS.AI
 {
-    public class EnemyVision : MonoBehaviour
+    public class BotVision : MonoBehaviour
     {
+        #region Fields
+
         [SerializeField] private int _rayCount;
 
         [SerializeField] private float _distance;
@@ -17,18 +19,36 @@ namespace FPS.AI
         [SerializeField] private LayerMask _detectedLayer;
         [SerializeField] private QueryTriggerInteraction _queryTriggerInteraction = QueryTriggerInteraction.Ignore;
 
-        public event Action EnemyDiscovered;
-        public event Action EnemyEscape;
+        #endregion
+
+        #region Properties
+
+        public bool PlayerIsDiscovered { get; private set; }
+
+        #endregion
+
+        #region Actions
+
+        public event Action PlayerDiscovered;
+        public event Action PlayerEscape;
+
+        #endregion
+
+        #region Unity Methods
 
         private void Update()
         {
-            bool detected = RayToScan();
+            PlayerIsDiscovered = RayToScan();
 
-            if (detected == true)
-                EnemyDiscovered?.Invoke();
+            if (PlayerIsDiscovered == true)
+                PlayerDiscovered?.Invoke();
             else
-                EnemyEscape?.Invoke();
+                PlayerEscape?.Invoke();
         }
+
+        #endregion
+
+        #region Private Methods
 
         private bool RayToScan()
         {
@@ -90,6 +110,8 @@ namespace FPS.AI
 
             return result;
         }
+
+        #endregion
     }
 }
 

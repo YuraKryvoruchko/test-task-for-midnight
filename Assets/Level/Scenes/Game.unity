@@ -150,34 +150,14 @@ PrefabInstance:
       propertyPath: _player
       value: 
       objectReference: {fileID: 8997996946398943992}
-    - target: {fileID: 357756642, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
-      propertyPath: _shootPoint
-      value: 
-      objectReference: {fileID: 378275791}
-    - target: {fileID: 357756645, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
-      propertyPath: m_Speed
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 357756645, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 357756648, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
-      propertyPath: _angle
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 357756648, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
-      propertyPath: _rayCount
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2520932505679364106, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
-      propertyPath: _weaponData
-      value: 
-      objectReference: {fileID: 11400000, guid: 5ba2a7e863ed14c449de9b78729f7f67, type: 2}
     - target: {fileID: 8460281124545966530, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_Name
       value: SwatWithAK
       objectReference: {fileID: 0}
+    - target: {fileID: 8766710817116754978, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: c07efd9e107324c42b06ea19f6fc239e, type: 3}
     - target: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -232,11 +212,6 @@ RectTransform:
 --- !u!4 &357756644 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
-  m_PrefabInstance: {fileID: 291633698}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &378275791 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 378275791, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
   m_PrefabInstance: {fileID: 291633698}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &614027055

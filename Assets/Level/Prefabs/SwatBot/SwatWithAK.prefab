@@ -2351,9 +2351,9 @@ GameObject:
   - component: {fileID: 8766710817116754978}
   - component: {fileID: 357756647}
   - component: {fileID: 357756641}
+  - component: {fileID: 357756648}
   - component: {fileID: 357756642}
   - component: {fileID: 357756645}
-  - component: {fileID: 357756648}
   m_Layer: 0
   m_Name: SwatWithAK
   m_TagString: Untagged
@@ -2388,7 +2388,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8460281124545966530}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: c07efd9e107324c42b06ea19f6fc239e, type: 3}
   m_Controller: {fileID: 9100000, guid: 3bd79f8f28303564cafca098e9089732, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -2426,6 +2426,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _defaultHealth: 100
+--- !u!114 &357756648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8460281124545966530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaaa8ed74af20a643a5e14228ad2d41c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rayCount: 4
+  _distance: 50
+  _angle: 20
+  _startPoint: {fileID: 378275791}
+  _offset: {x: 0, y: 0, z: 0}
+  _detectedLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  _queryTriggerInteraction: 1
 --- !u!114 &357756642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2439,16 +2460,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: {fileID: 357756641}
-  _enemyVision: {fileID: 357756648}
+  _vision: {fileID: 357756648}
   _swatCollider: {fileID: 357756647}
   _weapon: {fileID: 2520932505679364106}
-  _changePathDelay: 1
+  _shootPoint: {fileID: 378275791}
   _maxSpeed: 5
-  _maxRotationSpeed: 20
-  _offsetFromPlayer: {x: 0, y: 0, z: 0}
+  _maxRotationSpeed: 70
+  _maxDistanceToPlayer: 14
+  _minDistanceToPlayer: 9
   _navMeshAgent: {fileID: 357756645}
   _animator: {fileID: 8766710817116754978}
-  _speedParameter: Speed
+  _shootDelayInMS: 1160
+  _reloadDelayInMS: 3300
   _isShootParameter: IsShoot
   _isReloadParameter: IsReload
   _xAxitParameter: XAxit
@@ -2468,7 +2491,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 0
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -2477,27 +2500,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &357756648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8460281124545966530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaaa8ed74af20a643a5e14228ad2d41c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rayCount: 8
-  _distance: 50
-  _angle: 45
-  _startPoint: {fileID: 378275791}
-  _offset: {x: 0, y: 0, z: 0}
-  _detectedLayer:
-    serializedVersion: 2
-    m_Bits: 1
-  _queryTriggerInteraction: 1
 --- !u!1 &8551383063880323737
 GameObject:
   m_ObjectHideFlags: 0
@@ -2702,7 +2704,7 @@ PrefabInstance:
     - target: {fileID: 1489309067981473117, guid: d387f8b6936eee4498abf3832c203f35, type: 3}
       propertyPath: _weaponData
       value: 
-      objectReference: {fileID: 11400000, guid: 6b638d8db9ce6404b8763d94f9961a52, type: 2}
+      objectReference: {fileID: 11400000, guid: 5ba2a7e863ed14c449de9b78729f7f67, type: 2}
     - target: {fileID: 2384576983724426972, guid: d387f8b6936eee4498abf3832c203f35, type: 3}
       propertyPath: m_Bones.Array.data[1]
       value: 
