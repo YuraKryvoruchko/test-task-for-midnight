@@ -2350,6 +2350,7 @@ GameObject:
   - component: {fileID: 9089148567057165176}
   - component: {fileID: 8766710817116754978}
   - component: {fileID: 357756647}
+  - component: {fileID: 1054116615876656703}
   - component: {fileID: 357756641}
   - component: {fileID: 357756648}
   - component: {fileID: 357756642}
@@ -2413,6 +2414,19 @@ CapsuleCollider:
   m_Height: 1.7865716
   m_Direction: 1
   m_Center: {x: 0, y: 0.87328583, z: 0}
+--- !u!135 &1054116615876656703
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8460281124545966530}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 15
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &357756641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2439,13 +2453,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rayCount: 4
-  _distance: 50
+  _distance: 14.2
   _angle: 20
   _startPoint: {fileID: 378275791}
   _offset: {x: 0, y: 0, z: 0}
   _detectedLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 65
   _queryTriggerInteraction: 1
 --- !u!114 &357756642
 MonoBehaviour:
@@ -2477,7 +2491,6 @@ MonoBehaviour:
   _xAxitParameter: XAxit
   _zAxitParameter: ZAxit
   _deathParameter: Dead
-  _player: {fileID: 0}
 --- !u!195 &357756645
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -38,7 +38,7 @@ namespace FPS
         public override void StopShoot()
         {
             IsShooting = false;
-            Animator.SetBool(IsShootParameter, IsShooting);
+            Animator?.SetBool(IsShootParameter, IsShooting);
         }
         public async override void Reload(BulletValue bulletValue)
         {
@@ -71,7 +71,8 @@ namespace FPS
             CurrentBulletCount -= 1;
             OnShoot?.Invoke(CurrentBulletCount);
 
-            if (Physics.Raycast(ray, out RaycastHit raycastHit, int.MaxValue) == false)
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, int.MaxValue, WeaponData.LayerMask,
+                WeaponData.QueryTriggerInteraction) == false)
                 return;
             Debug.Log($"Hit: {raycastHit.transform.name}");
             if (raycastHit.transform.TryGetComponent(out ITakeDamaging takeDamaging) == true)

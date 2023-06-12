@@ -10,17 +10,24 @@ namespace FPS
     {
         #region Fields
 
+        [Header("Basic Components")]
+        [SerializeField] private Health _health;
         [SerializeField] private HandsAnimator _handsAnimator;
         [SerializeField] private FirstPersonController _firstPersonController;
         [SerializeField] private Inventory _inventory;
-        [Space]
-        [SerializeField] private CinemachineVirtualCamera _virtualCamera;
-        [SerializeField] private Camera _camera;
+        [Header("Crosshair Settings")]
         [SerializeField] private Crosshair _crosshair;
+        [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+        [Header("Weapon Settings")]
+        [SerializeField] private Camera _camera;
 
         private Weapon _currentWeapon;
 
         private StarterAssetsInput _input;
+
+        private const int WEAPON_1 = 1;
+        private const int WEAPON_2 = 2;
+        private const int WEAPON_3 = 3;
 
         #endregion
 
@@ -35,30 +42,15 @@ namespace FPS
 
         #region Unity Methods
 
-        private void Awake()
-        {
-            _input = new StarterAssetsInput();
-            _input.Player.Shoot.performed += (callback) => StartShoot();
-            _input.Player.Shoot.canceled += (callback) => StopShoot();
-            _input.Player.Reload.performed += (callback) => Reload();
-            _input.Player.Aim.performed += (callback) => Aim();
-            _input.Player.Aim.canceled += (callback) => ExitAiming();
-            _input.Player.Weapon1.performed += (callback) => SetWeapon(WeaponModel.AK);
-            _input.Player.Weapon2.performed += (callback) => SetWeapon(WeaponModel.ShootGun);
-            _input.Player.Weapon3.performed += (callback) => SetWeapon(WeaponModel.Pistol);
-        }
-        private void Start()
-        {
-            _crosshair.SetColor(Color.grey, 1);
-            SetWeapon(WeaponModel.AK);
-        }
         private void OnEnable()
         {
-            _input.Enable();
+            if(_input != null)
+                _input.Enable();
         }
         private void OnDisable()
         {
-            _input.Disable();
+            if (_input != null)
+                _input.Disable();
         }
         private void Update()
         {
@@ -74,25 +66,36 @@ namespace FPS
 
         public void Init()
         {
-            _input = new StarterAssetsInput();
-            _input.Player.Shoot.performed += (callback) => StartShoot();
-            _input.Player.Shoot.canceled += (callback) => StopShoot();
-            _input.Player.Reload.performed += (callback) => Reload();
-            _input.Player.Aim.performed += (callback) => Aim();
-            _input.Player.Aim.canceled += (callback) => ExitAiming();
-            _input.Player.Weapon1.performed += (callback) => SetWeapon(WeaponModel.AK);
-            _input.Player.Weapon2.performed += (callback) => SetWeapon(WeaponModel.ShootGun);
-            _input.Player.Weapon3.performed += (callback) => SetWeapon(WeaponModel.Pistol);
-            _input.Enable();
-
-            _crosshair.SetColor(Color.grey, 1);
-            SetWeapon(WeaponModel.AK);
+            _health.OnDeath += HandlePlayerDead;
+            _inventory.Init();
+            _crosshair.SetColor(Color.black, 1);
+            SetWeapon(WEAPON_1);
+            InputInstall();
+        }
+        public void Deactivate()
+        {
+            _input.Disable();
+            _firstPersonController.enabled = false;
+            _health.OnDeath -= HandlePlayerDead;
         }
 
         #endregion
 
         #region Private Methods
 
+        private void InputInstall()
+        {
+            _input = new StarterAssetsInput();
+            _input.Player.Shoot.performed += (callback) => StartShoot();
+            _input.Player.Shoot.canceled += (callback) => StopShoot();
+            _input.Player.Reload.performed += (callback) => Reload();
+            _input.Player.Aim.performed += (callback) => Aim();
+            _input.Player.Aim.canceled += (callback) => ExitAiming();
+            _input.Player.Weapon1.performed += (callback) => SetWeapon(WEAPON_1);
+            _input.Player.Weapon2.performed += (callback) => SetWeapon(WEAPON_2);
+            _input.Player.Weapon3.performed += (callback) => SetWeapon(WEAPON_3);
+            _input.Enable();
+        }
         private void StartShoot()
         {
             _currentWeapon.StartShoot();
@@ -134,10 +137,15 @@ namespace FPS
             _currentWeapon.StopShake();
             _crosshair.SetSize(_currentWeapon.CurrentSpread);
         }
-        private void SetWeapon(WeaponModel weapon)
+        private void HandlePlayerDead()
+        {
+            Deactivate();
+            OnDeath?.Invoke();
+        }
+        private void SetWeapon(int index)
         {
             _currentWeapon?.gameObject.SetActive(false);
-            _currentWeapon = _inventory.GetWeapon(weapon);
+            _currentWeapon = _inventory.GetWeapon(index);
             _currentWeapon.Init(new ShootRayCalculatorWithCamera(_camera));
             _handsAnimator.SetWeaponAnimator(_currentWeapon.Animator);
             _currentWeapon.gameObject.SetActive(true);

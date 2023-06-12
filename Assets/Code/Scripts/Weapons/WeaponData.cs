@@ -9,6 +9,9 @@ namespace FPS
     {
         #region Fields
 
+        [Header("Sprite")]
+        public Sprite Sprite;
+        [Header("WeaponSettings")]
         public int Damage = 20;
         public int MaxBulletCount = 30;
         [Header("Spread Settings")]
@@ -21,6 +24,9 @@ namespace FPS
         [Space]
         public WeaponModel WeaponModel;
         public BulletModel BulletModel;
+        [Header("Detected Settings")]
+        public LayerMask LayerMask;
+        public QueryTriggerInteraction QueryTriggerInteraction;
 
         #endregion
 
@@ -29,6 +35,7 @@ namespace FPS
         public WeaponData GetCopy()
         {
             WeaponData weaponData = CreateInstance<WeaponData>();
+            weaponData.Sprite = Sprite;
             weaponData.Damage = Damage;
             weaponData.MaxBulletCount = MaxBulletCount;
             weaponData.SpreadInIdle = SpreadInIdle;
@@ -38,6 +45,8 @@ namespace FPS
             weaponData.RateInMS = RateInMS;
             weaponData.WeaponModel = WeaponModel;
             weaponData.BulletModel = BulletModel;
+            weaponData.LayerMask = LayerMask;
+            weaponData.QueryTriggerInteraction = QueryTriggerInteraction;
 
             return weaponData;
         }

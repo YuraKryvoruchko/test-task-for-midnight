@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 namespace FPS
 {
-    public class Pistol : Weapon
+    public class ShootGun : Weapon
     {
         #region Actions
 
@@ -24,7 +24,6 @@ namespace FPS
             Animator.SetBool(IsShootParameter, IsShooting);
 
             Shoot();
-
             BlockWeapon();
             await UniTask.Delay(WeaponData.RateInMS);
             UnblockWeapon();
@@ -62,17 +61,21 @@ namespace FPS
             ShootParticle.gameObject.SetActive(true);
             ShootParticle.Play();
 
-            Ray ray = CalculateAndGetShootRay(CurrentSpread);
-            Debug.DrawRay(ray.origin, ray.direction * 200, Color.red, int.MaxValue);
+            for (int i = 0; i < 5; i++)
+            {
+                Ray ray = CalculateAndGetShootRay(CurrentSpread);
+                Debug.DrawRay(ray.origin, ray.direction * 200, Color.red, int.MaxValue);
+
+                if (Physics.Raycast(ray, out RaycastHit raycastHit, int.MaxValue, WeaponData.LayerMask,
+                WeaponData.QueryTriggerInteraction) == false)
+                    continue;
+                Debug.Log("Hit");
+                if (raycastHit.transform.TryGetComponent(out ITakeDamaging takeDamaging) == true)
+                    takeDamaging.TakeDamage(WeaponData.Damage);
+            }
 
             CurrentBulletCount -= 1;
             OnShoot?.Invoke(CurrentBulletCount);
-
-            if (Physics.Raycast(ray, out RaycastHit raycastHit, int.MaxValue) == false)
-                return;
-            Debug.Log("Hit");
-            if (raycastHit.transform.TryGetComponent(out ITakeDamaging takeDamaging) == true)
-                takeDamaging.TakeDamage(WeaponData.Damage);
         }
 
         #endregion

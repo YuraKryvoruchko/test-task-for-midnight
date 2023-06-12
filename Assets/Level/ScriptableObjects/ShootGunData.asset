@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf9a9e4cc373db4a90b6f5812c3241c, type: 3}
   m_Name: ShootGunData
   m_EditorClassIdentifier: 
+  Sprite: {fileID: 21300000, guid: f73db6fdb4b97524cbc9ae8cd5ec9abb, type: 3}
   Damage: 20
   MaxBulletCount: 4
   SpreadInIdle: 0.1
@@ -21,3 +22,7 @@ MonoBehaviour:
   RateInMS: 580
   WeaponModel: 2
   BulletModel: 2
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 2147483647
+  QueryTriggerInteraction: 1

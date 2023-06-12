@@ -1,20 +1,31 @@
 ﻿using System;
+using UnityEngine;
 
 namespace FPS
 {
+    [Serializable]
     public class BulletValue
     {
         #region Fields
 
-        private int _value;
+        [SerializeField] private int _value;
+
+        [SerializeField] private BulletModel _bulletModel;
+
+        #endregion
+
+        #region Properties
+
+        public BulletModel BulletModel { get => _bulletModel; private set => _bulletModel = value; }
 
         #endregion
 
         #region Constructor
 
-        public BulletValue(int value)
+        public BulletValue(int value, BulletModel bulletModel)
         {
             _value = value;
+            _bulletModel = bulletModel;
         }
 
         #endregion

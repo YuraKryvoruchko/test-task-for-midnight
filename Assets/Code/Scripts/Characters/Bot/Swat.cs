@@ -30,8 +30,10 @@ namespace FPS.AI
         [SerializeField] private string _xAxitParameter = "XAxit";
         [SerializeField] private string _zAxitParameter = "ZAxit";
         [SerializeField] private string _deathParameter = "Dead";
+            
+        private Player _player;
 
-        [SerializeField] private Player _player;
+        private bool _playerInZone = false;
 
         private bool _canMakeNextShoot = true;
         private bool _isReload = false;
@@ -50,13 +52,19 @@ namespace FPS.AI
 
         #region Unity Methods
 
-        private void Awake()
+        private void OnTriggerEnter(Collider other)
         {
-            Init(_player);
+            if (other.TryGetComponent(out Player player) == true)
+                _playerInZone = true;
+        }
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.TryGetComponent(out Player player) == true)
+                _playerInZone = false;
         }
         private void Update()
         {
-            if (_health.IsDead == true || _playerIsDead == true)
+            if (_health.IsDead == true || _playerIsDead == true || _playerInZone == false)
                 return;
 
             LookEnemy();
@@ -79,8 +87,8 @@ namespace FPS.AI
         public void Init(Player player)
         {
             _player = player;
-            _health.OnDeath += Die;
             _player.OnDeath += HandlePlayerDead;
+            _health.OnDeath += Die;
             _weapon.Init(new ShootRayCalculatorWithoutCamera(_shootPoint, _player.transform));
         }
 
@@ -134,7 +142,7 @@ namespace FPS.AI
         {
             _isReload = true;
             _animator.SetBool(_isReloadParameter, _isReload);
-            _weapon.Reload(new BulletValue(_weapon.WeaponData.MaxBulletCount));
+            _weapon.Reload(new BulletValue(_weapon.WeaponData.MaxBulletCount, BulletModel.AK));
 
             await UniTask.Delay(_reloadDelayInMS);
             _isReload = false;
@@ -177,6 +185,7 @@ namespace FPS.AI
             _vision.enabled = false;
             _health.OnDeath -= Die;
             _animator.SetTrigger(_deathParameter);
+            _player.OnDeath -= HandlePlayerDead;
             OnDead?.Invoke();
         }
         private void HandlePlayerDead()
@@ -185,6 +194,8 @@ namespace FPS.AI
             _playerIsDead = true;
             _navMeshAgent.isStopped = true;
             _vision.enabled = false;
+            _animator.SetBool(_isShootParameter, false);
+            _animator.SetBool(_isReloadParameter, false);
         }
 
         #endregion

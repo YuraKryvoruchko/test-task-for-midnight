@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf9a9e4cc373db4a90b6f5812c3241c, type: 3}
   m_Name: BotAK74MData
   m_EditorClassIdentifier: 
+  Sprite: {fileID: 21300000, guid: b0f282e6a31a02f4dac7d484cb6ed93c, type: 3}
   Damage: 15
   MaxBulletCount: 10
   SpreadInIdle: 0.05
@@ -21,3 +22,7 @@ MonoBehaviour:
   RateInMS: 200
   WeaponModel: 0
   BulletModel: 0
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 2147483647
+  QueryTriggerInteraction: 1
