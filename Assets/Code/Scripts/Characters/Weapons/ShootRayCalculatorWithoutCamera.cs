@@ -25,16 +25,15 @@ namespace FPS
 
         public Ray CalculateAndGetShootRay(float spread)
         {
-            float coefficient = (float)Screen.width / (float)Screen.height;
-            spread = coefficient * spread * 2;
-            //spread *= 30;
+            float distance = Vector3.Distance(_startPoint.position, _target.position);
+            float axitOffset = distance * Mathf.Tan(spread);
             Vector3 offset = Vector3.zero;
-            offset.x = Random.Range(-spread, spread);
-            offset.y = Random.Range(-spread, spread);
-            offset.z = Random.Range(-spread, spread);
+            offset.x = Random.Range(-axitOffset, axitOffset);
+            offset.y = Random.Range(-axitOffset, axitOffset);
+            offset.z = Random.Range(-axitOffset, axitOffset);
 
-            Vector3 targetPositionWithOffset = _target.position + offset;
-
+            Vector3 targetPositionWithOffset = new Vector3(_target.position.x, _startPoint.position.y,
+                _target.position.z) + offset;
             return new Ray(_startPoint.position, targetPositionWithOffset - _startPoint.position);
         }
 

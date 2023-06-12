@@ -154,6 +154,14 @@ PrefabInstance:
       propertyPath: _shootPoint
       value: 
       objectReference: {fileID: 378275791}
+    - target: {fileID: 357756645, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
+      propertyPath: m_Speed
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 357756645, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 357756648, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: _angle
       value: 20
@@ -162,6 +170,10 @@ PrefabInstance:
       propertyPath: _rayCount
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 2520932505679364106, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
+      propertyPath: _weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 5ba2a7e863ed14c449de9b78729f7f67, type: 2}
     - target: {fileID: 8460281124545966530, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_Name
       value: SwatWithAK
@@ -172,7 +184,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.209
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -180,7 +192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 14.02
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -188,15 +200,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9089148567057165176, guid: 2d73205ff08b546499bfde748b033d1d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

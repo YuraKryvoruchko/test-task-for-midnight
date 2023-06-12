@@ -17,6 +17,9 @@ namespace FPS
 
         public async override void StartShoot()
         {
+            if (IsBlock == true)
+                return;
+
             IsShooting = true;
             Animator.SetBool(IsShootParameter, IsShooting);
             while (IsShooting == true)
