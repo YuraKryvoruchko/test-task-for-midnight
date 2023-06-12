@@ -103,6 +103,7 @@ namespace FPS.Infrastructure
         private void HandleLose()
         {
             _isEnd = true;
+            _currentPlayer.Deactivate();
             UnlockCursor();
 
             int currentLoseCount = SaveSystem.GetInt(SaveLoadKeys.LOSE_COUNT);

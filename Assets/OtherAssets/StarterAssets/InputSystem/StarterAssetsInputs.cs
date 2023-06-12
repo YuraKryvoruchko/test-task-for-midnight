@@ -17,6 +17,7 @@ namespace StarterAssets
 		public bool analogMovement;
 
 		[Header("Mouse Cursor Settings")]
+		public bool setFocus = false;
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
@@ -68,7 +69,8 @@ namespace StarterAssets
 		
 		private void OnApplicationFocus(bool hasFocus)
 		{
-			SetCursorState(cursorLocked);
+			if(setFocus == true)
+				SetCursorState(cursorLocked);
 		}
 
 		private void SetCursorState(bool newState)
