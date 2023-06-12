@@ -16,10 +16,13 @@ namespace FPS
         [SerializeField] private FirstPersonController _firstPersonController;
         [SerializeField] private Inventory _inventory;
         [Header("Crosshair Settings")]
+        [SerializeField] private float _defaultFOV = 40f;
+        [SerializeField] private float _aimedFOV = 20f;
         [SerializeField] private Crosshair _crosshair;
         [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+        [SerializeField] private Camera _handsCamera;
         [Header("Weapon Settings")]
-        [SerializeField] private Camera _camera;
+        [SerializeField] private Camera _mainCamera;
 
         private Weapon _currentWeapon;
 
@@ -114,13 +117,15 @@ namespace FPS
         {
             _currentWeapon.Aim();
             _crosshair.SetSize(_currentWeapon.CurrentSpread);
-            _virtualCamera.m_Lens.FieldOfView = 20;
+            _virtualCamera.m_Lens.FieldOfView = _aimedFOV;
+            _handsCamera.fieldOfView = _aimedFOV;
         }
         private void ExitAiming()
         {
             _currentWeapon.ExitAiming();
             _crosshair.SetSize(_currentWeapon.CurrentSpread);
-            _virtualCamera.m_Lens.FieldOfView = 40;
+            _virtualCamera.m_Lens.FieldOfView = _defaultFOV;
+            _handsCamera.fieldOfView = _defaultFOV;
         }
         private void HandleMove()
         {
@@ -146,7 +151,7 @@ namespace FPS
         {
             _currentWeapon?.gameObject.SetActive(false);
             _currentWeapon = _inventory.GetWeapon(index);
-            _currentWeapon.Init(new ShootRayCalculatorWithCamera(_camera));
+            _currentWeapon.Init(new ShootRayCalculatorWithCamera(_mainCamera));
             _handsAnimator.SetWeaponAnimator(_currentWeapon.Animator);
             _currentWeapon.gameObject.SetActive(true);
             _crosshair.SetSize(_currentWeapon.CurrentSpread);
