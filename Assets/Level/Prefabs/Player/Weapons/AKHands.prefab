@@ -917,7 +917,7 @@ GameObject:
   m_Layer: 0
   m_Name: ShootPoint
   m_TagString: Untagged
-  m_Icon: {fileID: -5938655980376293919, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2473,13 +2473,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f0f52d3a8d658948a0fcc23ad45b4a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 25
-  _maxBulletCount: 30
-  _bulletModel: 0
+  _weaponData: {fileID: 0}
   _shootParticle: {fileID: 1945183929755542518}
   _animator: {fileID: 6685400338831247256}
-  _shootParameter: IsShoot
-  _reloadParameter: Reload
+  _isShootParameter: IsShoot
+  _isReloadParameter: IsReload
 --- !u!1 &6697939986481328058
 GameObject:
   m_ObjectHideFlags: 0

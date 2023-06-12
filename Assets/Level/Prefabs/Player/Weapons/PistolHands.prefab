@@ -2192,8 +2192,8 @@ MonoBehaviour:
   _weaponData: {fileID: 11400000, guid: 616cf56e941f9704185a819fa614d2ce, type: 2}
   _shootParticle: {fileID: 9116380986690489850}
   _animator: {fileID: 6136959632057833512}
-  _shootParameter: IsShoot
-  _reloadParameter: IsReload
+  _isShootParameter: IsShoot
+  _isReloadParameter: IsReload
 --- !u!1 &6277634122382827283
 GameObject:
   m_ObjectHideFlags: 0
@@ -2334,7 +2334,7 @@ GameObject:
   m_Layer: 0
   m_Name: ShootPoint
   m_TagString: Untagged
-  m_Icon: {fileID: -5938655980376293919, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

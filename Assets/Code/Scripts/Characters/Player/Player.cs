@@ -70,6 +70,27 @@ namespace FPS
 
         #endregion
 
+        #region Public Methods
+
+        public void Init()
+        {
+            _input = new StarterAssetsInput();
+            _input.Player.Shoot.performed += (callback) => StartShoot();
+            _input.Player.Shoot.canceled += (callback) => StopShoot();
+            _input.Player.Reload.performed += (callback) => Reload();
+            _input.Player.Aim.performed += (callback) => Aim();
+            _input.Player.Aim.canceled += (callback) => ExitAiming();
+            _input.Player.Weapon1.performed += (callback) => SetWeapon(WeaponModel.AK);
+            _input.Player.Weapon2.performed += (callback) => SetWeapon(WeaponModel.ShootGun);
+            _input.Player.Weapon3.performed += (callback) => SetWeapon(WeaponModel.Pistol);
+            _input.Enable();
+
+            _crosshair.SetColor(Color.grey, 1);
+            SetWeapon(WeaponModel.AK);
+        }
+
+        #endregion
+
         #region Private Methods
 
         private void StartShoot()
